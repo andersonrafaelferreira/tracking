@@ -14,6 +14,7 @@ export default class App extends Component {
   };
 
   componentWillMount() {
+    console.disableYellowBox = true;
     if (Platform.OS === "android" && !Constants.isDevice) {
       this.setState({
         errorMessage:
@@ -56,20 +57,29 @@ export default class App extends Component {
     );
   }
 }
-
+let counter = 0;
 TaskManager.defineTask("gps", ({ data, error }) => {
   if (error) {
     // Error occurred - check `error.message` for more details.
     return;
   }
   if (data) {
-    const { locations } = data;
-    console.log(data);
+    if (counter <= 5) {
+      console.log(counter);
+      const { locations } = data;
+      console.log(locations);
+      counter++;
+    } else {
+      console.log("finished?");
+      Location.stopLocationUpdatesAsync("gps");
+      console.log(Location.stopLocationUpdatesAsync("gps"));
+    }
 
     // this.setState({ location: locations });
     // do something with the locations captured in the background
   }
 });
+
 // TaskManager.defineTask("gps", () => {
 //   try {
 //     const receivedNewData = () => {
